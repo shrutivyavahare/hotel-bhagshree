@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Admin{% endblock %} — Hotel Bhagshree</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" role="navigation" aria-label="Admin navigation">
+      <div class="admin-sidebar__brand">
+        <h2>Hotel Bhagshree</h2>
+        <p>Admin Dashboard</p>
+      </div>
+
+      <p class="admin-nav__section-label">Overview</p>
+      <a href="{{ url_for('admin.dashboard') }}"   class="admin-nav-link {{ 'active' if request.endpoint == 'admin.dashboard' }}" id="nav-dashboard"><span class="icon">📊</span> Dashboard</a>
+
+      <p class="admin-nav__section-label">Menu</p>
+      <a href="{{ url_for('admin.menu_list') }}"   class="admin-nav-link {{ 'active' if 'menu' in request.endpoint }}" id="nav-menu-list"><span class="icon">🍽</span> Menu Items</a>
+      <a href="{{ url_for('admin.menu_add') }}"    class="admin-nav-link" id="nav-menu-add"><span class="icon">➕</span> Add Dish</a>
+      <a href="{{ url_for('admin.categories') }}"  class="admin-nav-link {{ 'active' if request.endpoint == 'admin.categories' }}" id="nav-cats"><span class="icon">🗂</span> Categories</a>
+
+      <p class="admin-nav__section-label">Operations</p>
+      <a href="{{ url_for('admin.orders') }}"         class="admin-nav-link {{ 'active' if request.endpoint == 'admin.orders' }}" id="nav-orders"><span class="icon">🛒</span> Orders</a>
+      <a href="{{ url_for('admin.reservations') }}"   class="admin-nav-link {{ 'active' if request.endpoint == 'admin.reservations' }}" id="nav-reservations"><span class="icon">📅</span> Reservations</a>
+
+      <p class="admin-nav__section-label">System</p>
+      <a href="{{ url_for('admin.rules_list') }}"  class="admin-nav-link {{ 'active' if request.endpoint == 'admin.rules_list' }}" id="nav-rules"><span class="icon">🧠</span> Rec. Rules</a>
+
+      <div style="flex:1;"></div>
+      <div style="padding:1rem 1.5rem;border-top:1px solid var(--c-border-2);">
+        <a href="{{ url_for('main.index') }}" class="admin-nav-link" id="nav-site">🌐 View Site</a>
+        <a href="{{ url_for('auth.logout') }}" class="admin-nav-link" id="nav-logout" style="color:var(--c-red);">🚪 Logout</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main" role="main">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div style="margin-bottom:1.5rem;">
+          {% for category, message in messages %}
+            <div class="flash flash--{{ category }}" style="position:relative;max-width:100%;margin-bottom:.5rem;">
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+  </div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

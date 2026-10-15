@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Contact Us{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="container">
+    <h1 style="font-family:var(--f-serif);font-size:clamp(2rem,5vw,3.5rem);margin-bottom:.75rem;">
+      Get in <em style="color:var(--c-gold)">Touch</em>
+    </h1>
+    <p style="color:var(--c-text-2);max-width:420px;margin:0 auto;">We'd love to hear from you. Reservations, feedback, or just a friendly hello.</p>
+  </div>
+</div>
+
+<section class="section--sm">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+      <!-- Contact Info -->
+      <div>
+        <h2 style="font-family:var(--f-serif);font-size:1.8rem;margin-bottom:1.5rem;color:var(--c-text);">Visit Us</h2>
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+          {% for icon, label, value, href in [
+            ('📍','Address','Near Canada Corner, College Road,\nNashik – 422005, Maharashtra, India', None),
+            ('📞','Phone','+91 253 257 8899','tel:+912532578899'),
+            ('✉','Email','contact@hotelbhagshree.com','mailto:contact@hotelbhagshree.com'),
+            ('🕐','Hours','Mon–Fri: 11:00–22:30\nSat: 10:00–23:00\nSun: 10:00–22:00', None),
+          ] %}
+          <div style="display:flex;gap:1rem;align-items:flex-start;">
+            <div style="width:44px;height:44px;background:rgba(201,168,76,.1);border:1px solid var(--c-border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">{{ icon }}</div>
+            <div>
+              <p style="font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--c-text-3);margin-bottom:.25rem;">{{ label }}</p>
+              {% if href %}
+              <a href="{{ href }}" style="color:var(--c-text-2);font-size:.9rem;">{{ value }}</a>
+              {% else %}
+              <p style="color:var(--c-text-2);font-size:.9rem;white-space:pre-line;">{{ value }}</p>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div style="margin-top:2rem;background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);overflow:hidden;">
+          <div style="background:var(--c-bg-2);height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--c-text-2);font-size:.9rem;text-align:center;padding:1rem;">
+            <div style="font-size:1.5rem;margin-bottom:.5rem;">📍</div>
+            <strong>Hotel Bhagshree, College Road, Nashik</strong>
+            <span style="font-size:.8rem;margin-top:.25rem;color:var(--c-text-3);">Landmark: Near Canada Corner, Nashik 422005</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:2rem;">
+        <h2 style="font-family:var(--f-serif);font-size:1.5rem;margin-bottom:1.5rem;color:var(--c-text);">Send a Message</h2>
+        <form id="contact-form">
+          <div class="form-group">
+            <label class="form-label" for="c-name">Your Name</label>
+            <input type="text" id="c-name" class="form-control" placeholder="Full name">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="c-email">Email Address</label>
+            <input type="email" id="c-email" class="form-control" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="c-subject">Subject</label>
+            <select id="c-subject" class="form-control">
+              <option>General Enquiry</option>
+              <option>Reservation Help</option>
+              <option>Feedback</option>
+              <option>Private Event</option>
+              <option>Corporate Catering</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="c-message">Message</label>
+            <textarea id="c-message" class="form-control" rows="4" placeholder="How can we help you?"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary w-full" id="send-message-btn" style="justify-content:center;">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Simulate form submission for demo
+    const btn = document.getElementById('send-message-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    setTimeout(() => {
+      btn.textContent = '✓ Message Sent';
+      btn.style.background = 'var(--c-success)';
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+        btn.style.background = '';
+        this.reset();
+      }, 3000);
+    }, 1200);
+  });
+</script>
+{% endblock %}

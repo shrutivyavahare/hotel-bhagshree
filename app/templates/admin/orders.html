@@ -1,0 +1,48 @@
+{% extends "admin/base.html" %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<div class="admin-header">
+  <h1>Orders</h1>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+    {% for s in ['','pending','confirmed','preparing','ready','delivered','cancelled'] %}
+    <a href="{{ url_for('admin.orders', status=s) }}"
+       class="btn {{ 'btn-primary' if status_filter == s else 'btn-ghost' }}"
+       style="font-size:.75rem;padding:.4rem .9rem;"
+       id="filter-{{ s or 'all' }}">
+      {{ s | title if s else 'All' }}
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+<div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);overflow:hidden;">
+  <table class="admin-table">
+    <thead>
+      <tr><th>Order ID</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Time</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td><span style="color:var(--c-gold);font-family:monospace;font-size:.8rem;">{{ order.order_id }}</span></td>
+        <td style="color:var(--c-text);">{{ order.customer_name }}</td>
+        <td>{{ order.customer_phone }}</td>
+        <td style="font-size:.8rem;">{{ order.items.count() }} item(s)</td>
+        <td style="color:var(--c-gold);">₹{{ order.total_amount | int }}</td>
+        <td style="font-size:.78rem;">{{ order.created_at.strftime('%d %b, %H:%M') }}</td>
+        <td>
+          <select data-update-order-status="{{ order.id }}"
+                  id="status-select-{{ order.id }}"
+                  style="background:var(--c-bg-2);border:1px solid var(--c-border);border-radius:var(--radius);color:var(--c-text-2);font-size:.78rem;padding:.25rem .5rem;">
+            {% for s in ['pending','confirmed','preparing','ready','delivered','cancelled'] %}
+            <option value="{{ s }}" {{ 'selected' if order.status == s }}>{{ s | title }}</option>
+            {% endfor %}
+          </select>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" style="text-align:center;padding:3rem;color:var(--c-text-3);">No orders found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

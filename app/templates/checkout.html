@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+
+{% block extra_head %}
+<style>
+  [data-animate]{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+  [data-animate].animated{opacity:1;transform:translateY(0)}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container">
+    <h1 style="font-family:var(--f-serif);font-size:2.5rem;">Complete your <em style="color:var(--c-gold)">Order</em></h1>
+  </div>
+</div>
+
+<section class="section--sm">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:start;">
+
+      <!-- Customer Details Form -->
+      <form method="POST" data-animate>
+        <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:2rem;margin-bottom:1.5rem;">
+          <h2 style="font-family:var(--f-serif);font-size:1.4rem;margin-bottom:1.5rem;color:var(--c-text);">Your Details</h2>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+            <div class="form-group">
+              <label class="form-label" for="name">Full Name *</label>
+              <input type="text" id="name" name="name" class="form-control" required placeholder="Your full name">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="phone">Mobile Number *</label>
+              <input type="tel" id="phone" name="phone" class="form-control" required placeholder="10-digit number" pattern="[0-9]{10,12}">
+            </div>
+            <div class="form-group" style="grid-column:span 2;">
+              <label class="form-label" for="email">Email Address</label>
+              <input type="email" id="email" name="email" class="form-control" placeholder="For order confirmation (optional)">
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:2rem;margin-bottom:1.5rem;">
+          <h2 style="font-family:var(--f-serif);font-size:1.4rem;margin-bottom:1.5rem;color:var(--c-text);">Payment Method</h2>
+          <div style="display:flex;flex-direction:column;gap:.75rem;">
+            <label style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1px solid var(--c-border-2);border-radius:var(--radius);cursor:pointer;" id="payment-cash-label">
+              <input type="radio" name="payment" value="cash" checked style="accent-color:var(--c-gold);">
+              💵 Cash on Delivery / Pay at Counter
+            </label>
+            <label style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1px solid var(--c-border-2);border-radius:var(--radius);cursor:pointer;" id="payment-counter-label">
+              <input type="radio" name="payment" value="pay_counter" style="accent-color:var(--c-gold);">
+              🏪 Pay at Counter (Dine-in)
+            </label>
+          </div>
+        </div>
+
+        <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:2rem;">
+          <div class="form-group">
+            <label class="form-label" for="notes">Special Instructions</label>
+            <textarea id="notes" name="notes" class="form-control" placeholder="Allergies, no onion, extra spicy…" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary w-full" id="place-order-btn" style="justify-content:center;padding:1rem;">
+            ✓ Place Order
+          </button>
+        </div>
+      </form>
+
+      <!-- Order Summary Sidebar -->
+      <div class="order-summary" data-animate>
+        <h2 class="order-summary__title">Order Summary</h2>
+        {% for ci in cart_items %}
+        <div class="order-line">
+          <span>{{ ci.item.name }} <span style="color:var(--c-text-3)">× {{ ci.qty }}</span></span>
+          <span>₹{{ ci.line_total | int }}</span>
+        </div>
+        {% endfor %}
+        <div class="order-line"><span>Subtotal</span><span>₹{{ subtotal | int }}</span></div>
+        <div class="order-line"><span>GST (5%)</span><span>₹{{ tax | int }}</span></div>
+        <div class="order-line order-line--total">
+          <span>Total</span>
+          <span class="price">₹{{ total | int }}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

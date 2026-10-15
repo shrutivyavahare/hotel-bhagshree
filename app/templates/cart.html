@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Your Cart{% endblock %}
+
+{% block extra_head %}
+<style>
+  [data-animate]{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+  [data-animate].animated{opacity:1;transform:translateY(0)}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container">
+    <h1 style="font-family:var(--f-serif);font-size:2.5rem;">Your <em style="color:var(--c-gold)">Cart</em></h1>
+  </div>
+</div>
+
+<section class="section--sm">
+  <div class="container">
+    {% if cart_items %}
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:start;">
+
+      <!-- Cart Items -->
+      <div data-animate>
+        <table class="cart-table" aria-label="Cart items">
+          <thead>
+            <tr>
+              <th>Dish</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ci in cart_items %}
+            <tr id="cart-row-{{ ci.item.id }}">
+              <td>
+                <div style="display:flex;align-items:center;gap:1rem;">
+                  <img src="{{ url_for('static', filename='images/' + ci.item.image_file) }}"
+                       alt="{{ ci.item.name }}"
+                       style="width:60px;height:60px;object-fit:cover;border-radius:var(--radius);"
+                       onerror="this.onerror=null;this.src='/static/images/hero_food.jpg';">
+                  <div>
+                    <p style="color:var(--c-text);font-weight:500;">{{ ci.item.name }}</p>
+                    <p style="font-size:.75rem;color:var(--c-text-3);">{{ ci.item.category.name if ci.item.category }}</p>
+                  </div>
+                </div>
+              </td>
+              <td style="color:var(--c-gold);">₹{{ ci.item.price | int }}</td>
+              <td>
+                <div class="qty-control">
+                  <button class="qty-btn" data-qty-btn data-item-id="{{ ci.item.id }}" data-delta="-1" aria-label="Decrease quantity">−</button>
+                  <span class="qty-display" data-qty-display="{{ ci.item.id }}">{{ ci.qty }}</span>
+                  <button class="qty-btn" data-qty-btn data-item-id="{{ ci.item.id }}" data-delta="1"  aria-label="Increase quantity">+</button>
+                </div>
+              </td>
+              <td style="color:var(--c-text);">₹{{ ci.line_total | int }}</td>
+              <td>
+                <button data-remove-item="{{ ci.item.id }}"
+                        style="color:var(--c-red);background:none;border:none;cursor:pointer;font-size:.85rem;"
+                        aria-label="Remove {{ ci.item.name }}">✕ Remove</button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div style="margin-top:1.5rem;display:flex;gap:1rem;">
+          <a href="{{ url_for('menu.index') }}" class="btn btn-ghost">← Continue Shopping</a>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary" data-animate>
+        <h2 class="order-summary__title">Order Summary</h2>
+        <div class="order-line"><span>Subtotal</span><span>₹{{ subtotal | int }}</span></div>
+        <div class="order-line"><span>GST (5%)</span><span>₹{{ tax | int }}</span></div>
+        <div class="order-line order-line--total">
+          <span>Total</span>
+          <span class="price">₹{{ total | int }}</span>
+        </div>
+        <a href="{{ url_for('orders.checkout') }}" class="btn btn-primary w-full" style="margin-top:1.5rem;justify-content:center;" id="proceed-checkout-btn">
+          Proceed to Checkout →
+        </a>
+        <p style="font-size:.72rem;color:var(--c-text-3);margin-top:1rem;text-align:center;">
+          Cash on delivery or pay at counter
+        </p>
+      </div>
+    </div>
+
+    {% else %}
+    <div style="text-align:center;padding:5rem 1rem;" data-animate>
+      <div style="font-size:4rem;margin-bottom:1rem;">🛒</div>
+      <h2 style="font-family:var(--f-serif);margin-bottom:.75rem;">Your cart is empty</h2>
+      <p style="color:var(--c-text-2);margin-bottom:2rem;">Looks like you haven't added anything yet. Let's fix that!</p>
+      <a href="{{ url_for('menu.index') }}" class="btn btn-primary" id="browse-menu-btn">Browse the Menu</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

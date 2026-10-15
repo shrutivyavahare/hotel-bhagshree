@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Reservation History{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="container">
+    <h1 style="font-family:var(--f-serif);font-size:2.5rem;">My <em style="color:var(--c-gold)">Reservations</em></h1>
+  </div>
+</div>
+<section class="section--sm">
+  <div class="container" style="max-width:760px;">
+    <form method="GET" style="display:flex;gap:1rem;margin-bottom:2rem;align-items:flex-end;">
+      <div class="form-group" style="flex:1;margin:0;">
+        <label class="form-label" for="phone-res">Enter your phone number</label>
+        <input type="tel" id="phone-res" name="phone" class="form-control" placeholder="10-digit mobile number" value="{{ phone }}">
+      </div>
+      <button type="submit" class="btn btn-primary" id="search-reservations-btn">Search</button>
+    </form>
+    {% if phone and not reservations %}
+    <p style="text-align:center;color:var(--c-text-2);padding:2rem;">No reservations found for {{ phone }}.</p>
+    {% endif %}
+    {% for res in reservations %}
+    <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem;">
+        <div>
+          <div class="order-id" style="display:inline-block;font-size:.85rem;padding:.25rem .75rem;margin-bottom:.5rem;">{{ res.booking_ref }}</div>
+          <p style="font-size:.9rem;color:var(--c-text);">{{ res.reservation_date.strftime('%A, %d %b %Y') }} at {{ res.reservation_time }}</p>
+          <p style="font-size:.8rem;color:var(--c-text-3);">{{ res.guests }} guests · Table {{ res.table.table_number }}</p>
+        </div>
+        <span class="status-badge status-badge--{{ res.status }}">{{ res.status | title }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

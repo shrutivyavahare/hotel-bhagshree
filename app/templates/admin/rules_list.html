@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+{% block title %}Recommendation Rules{% endblock %}
+{% block content %}
+<div class="admin-header">
+  <h1>Recommendation Rules</h1>
+  <span style="font-size:.82rem;color:var(--c-text-3);">{{ rules | selectattr('is_active') | list | length }} active / {{ rules | length }} total</span>
+</div>
+
+<p style="color:var(--c-text-2);font-size:.88rem;max-width:700px;margin-bottom:2rem;">
+  These IF–THEN rules power the expert recommendation system. Toggle rules on or off to affect recommendations in real time. Higher priority rules are evaluated first.
+</p>
+
+<div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);overflow:hidden;">
+  <table class="admin-table">
+    <thead>
+      <tr><th>Rule ID</th><th>Rule Name</th><th>Conditions</th><th>Priority</th><th>Status</th><th>Toggle</th></tr>
+    </thead>
+    <tbody>
+      {% for rule in rules %}
+      <tr>
+        <td><span style="color:var(--c-gold);font-family:monospace;font-size:.8rem;">{{ rule.rule_id }}</span></td>
+        <td style="color:var(--c-text);font-size:.88rem;">{{ rule.rule_name }}</td>
+        <td style="font-size:.78rem;color:var(--c-text-3);max-width:280px;">
+          {% for k, v in rule.to_dict()['conditions'].items() %}
+          <span class="rule-tag" style="margin:.1rem;">
+            <strong>{{ k.replace('_', ' ') | title }}</strong> = {{ v }}
+          </span>
+          {% endfor %}
+        </td>
+        <td>
+          <span style="background:rgba(201,168,76,.1);color:var(--c-gold);padding:.2rem .6rem;border-radius:20px;font-size:.78rem;">P{{ rule.priority }}</span>
+        </td>
+        <td>
+          <span class="status-badge status-badge--{{ 'confirmed' if rule.is_active else 'cancelled' }}">
+            {{ 'Active' if rule.is_active else 'Disabled' }}
+          </span>
+        </td>
+        <td>
+          <button data-toggle-rule="{{ rule.id }}"
+                  id="toggle-rule-{{ rule.id }}"
+                  class="btn {{ 'btn-ghost' if rule.is_active else 'btn-outline' }}"
+                  style="font-size:.72rem;padding:.35rem .8rem;">
+            {{ 'Disable' if rule.is_active else 'Enable' }}
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

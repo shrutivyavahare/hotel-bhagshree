@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Order Status — {{ order.order_id }}{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top:calc(var(--nav-h) + 3rem);">
+  <div class="container" style="max-width:640px;">
+    <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:2.5rem;">
+
+      <div class="section-label" style="margin-bottom:.5rem;">
+        <span>Live Order Tracking</span>
+      </div>
+
+      <h1 style="font-family:var(--f-serif);font-size:2rem;margin-bottom:.5rem;">Order Status</h1>
+      <div class="order-id" style="margin-bottom:1.5rem;">{{ order.order_id }}</div>
+
+      {% set steps = [('pending','Order Received','🧾'),('confirmed','Confirmed','✅'),('preparing','Being Prepared','👨‍🍳'),('ready','Ready','🔔'),('delivered','Delivered','🎉')] %}
+      {% set status_order = {'pending':0,'confirmed':1,'preparing':2,'ready':3,'delivered':4,'cancelled':-1} %}
+      {% set current_idx = status_order.get(order.status, 0) %}
+
+      {% if order.status == 'cancelled' %}
+      <div style="background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.2);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;color:#e74c3c;margin-bottom:1.5rem;">
+        ✕ This order has been cancelled.
+      </div>
+      <style>
+        .track-step-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .track-step-icon {
+          width: 40px; height: 40px; border-radius: 50%;
+          border: 2px solid var(--c-border); background: transparent;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 1rem; flex-shrink: 0;
+        }
+        .track-step-icon.is-done {
+          border-color: var(--c-gold);
+          background: rgba(201, 168, 76, 0.15);
+        }
+        .track-step-icon.is-current {
+          box-shadow: 0 0 12px rgba(201, 168, 76, 0.3);
+        }
+        .track-step-label {
+          font-size: 0.88rem;
+          font-weight: 400;
+          color: var(--c-text-3);
+        }
+        .track-step-label.is-done {
+          color: var(--c-text);
+        }
+        .track-step-label.is-current {
+          font-weight: 600;
+          color: var(--c-gold);
+        }
+      </style>
+      {% else %}
+      <div style="position:relative;padding:1rem 0;">
+        {% for step_status, step_label, step_icon in steps %}
+        {% set step_idx = loop.index0 %}
+        {% set is_done = step_idx <= current_idx %}
+        {% set is_current = step_idx == current_idx %}
+        <div class="track-step-item">
+          <div class="track-step-icon{% if is_done %} is-done{% endif %}{% if is_current %} is-current{% endif %}">
+            {{ step_icon if is_done else '' }}
+          </div>
+          <div>
+            <p class="track-step-label{% if is_done %} is-done{% endif %}{% if is_current %} is-current{% endif %}">
+              {{ step_label }}
+              {% if is_current %}<span style="font-size:.72rem;margin-left:.5rem;color:var(--c-text-3);">← current</span>{% endif %}
+            </p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div style="margin-top:1.5rem;font-size:.82rem;color:var(--c-text-3);">
+        Placed: {{ order.created_at.strftime('%d %b %Y, %I:%M %p') if order.created_at else 'Recently' }}
+        · Total: <strong style="color:var(--c-gold);">₹{{ order.total_amount | int }}</strong>
+      </div>
+
+      <div style="margin-top:1.5rem;">
+        <a href="{{ url_for('menu.index') }}" class="btn btn-outline" id="status-order-more-btn">Order More</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

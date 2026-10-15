@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Hotel Bhagshree</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <style>
+    body { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+  </style>
+</head>
+<body>
+  <div style="width:100%;max-width:400px;padding:1rem;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash flash--{{ category }}" style="margin-bottom:1rem;">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div style="text-align:center;margin-bottom:2rem;">
+      <div style="width:56px;height:56px;background:var(--c-gold);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--f-serif);font-size:1.5rem;color:var(--c-bg);margin:0 auto 1rem;">HB</div>
+      <h1 style="font-family:var(--f-serif);font-size:1.5rem;color:var(--c-text);">Hotel Bhagshree</h1>
+      <p style="font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);">Admin Dashboard</p>
+    </div>
+
+    <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:2rem;">
+      <form method="POST" id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input type="text" id="username" name="username" class="form-control" required placeholder="admin" autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control" required placeholder="••••••••">
+        </div>
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--c-text-2);margin-bottom:1.5rem;">
+          <input type="checkbox" name="remember" style="accent-color:var(--c-gold);"> Remember me
+        </label>
+        <button type="submit" class="btn btn-primary w-full" id="login-btn" style="justify-content:center;">Sign In to Dashboard</button>
+      </form>
+    </div>
+
+    <div style="text-align:center;margin-top:1.5rem;">
+      <a href="{{ url_for('main.index') }}" style="font-size:.78rem;color:var(--c-text-3);">← Back to Restaurant Website</a>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+{% block title %}Categories{% endblock %}
+{% block content %}
+<div class="admin-header">
+  <h1>Food Categories</h1>
+</div>
+<div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);overflow:hidden;">
+  <table class="admin-table">
+    <thead><tr><th>Icon</th><th>Name</th><th>Description</th><th>Items</th><th>Active</th></tr></thead>
+    <tbody>
+      {% for cat in categories %}
+      <tr>
+        <td style="font-size:1.5rem;">{{ cat.icon }}</td>
+        <td style="color:var(--c-text);font-weight:500;">{{ cat.name }}</td>
+        <td style="font-size:.82rem;color:var(--c-text-3);">{{ cat.description }}</td>
+        <td><a href="{{ url_for('admin.menu_list') }}" style="color:var(--c-gold);">{{ cat.items.filter_by(is_available=True).count() }}</a></td>
+        <td><span class="status-badge status-badge--{{ 'confirmed' if cat.is_active else 'cancelled' }}">{{ 'Yes' if cat.is_active else 'No' }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

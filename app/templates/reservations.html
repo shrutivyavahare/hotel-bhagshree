@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Reserve a Table{% endblock %}
+{% block meta_desc %}Book a table at Hotel Bhagshree — choose your date, time, and party size. Instant confirmation guaranteed.{% endblock %}
+
+{% block extra_head %}
+<style>
+  [data-animate]{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+  [data-animate].animated{opacity:1;transform:translateY(0)}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container">
+    <div class="section-label" style="justify-content:center;"><span>Booking</span></div>
+    <h1 style="font-family:var(--f-serif);font-size:clamp(2rem,5vw,3.5rem);margin-bottom:.75rem;">
+      Reserve a <em style="color:var(--c-gold)">Table</em>
+    </h1>
+    <p style="color:var(--c-text-2);max-width:440px;margin:0 auto;">
+      We take reservations for parties of 1–20 guests. Tables are assigned based on availability and party size.
+    </p>
+  </div>
+</div>
+
+<section class="section--sm">
+  <div class="container" style="max-width:900px;">
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start;">
+
+      <form method="POST" data-animate id="reservation-form">
+
+        <!-- Date & Guests -->
+        <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:2rem;margin-bottom:1.5rem;">
+          <h2 style="font-family:var(--f-serif);font-size:1.3rem;margin-bottom:1.5rem;color:var(--c-text);">When & How Many</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+            <div class="form-group">
+              <label class="form-label" for="res-date">Date *</label>
+              <input type="date" id="res-date" name="date" class="form-control" required min="{{ min_date }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="res-guests">Number of Guests *</label>
+              <input type="number" id="res-guests" name="guests" class="form-control"
+                     required min="1" max="20" value="2" placeholder="2">
+            </div>
+          </div>
+        </div>
+
+        <!-- Time Slots -->
+        <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:2rem;margin-bottom:1.5rem;">
+          <h2 style="font-family:var(--f-serif);font-size:1.3rem;margin-bottom:1rem;color:var(--c-text);">Select a Time Slot</h2>
+          <p style="font-size:.8rem;color:var(--c-text-3);margin-bottom:1.25rem;">Select a date first, then choose an available slot.</p>
+          <div class="time-grid">
+            {% for t in valid_times %}
+            <div class="time-slot" data-time="{{ t }}" id="slot-{{ t | replace(':', '') }}" role="button" tabindex="0">{{ t }}</div>
+            {% endfor %}
+          </div>
+          <input type="hidden" name="time" id="selected-time" required>
+        </div>
+
+        <!-- Contact -->
+        <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:2rem;">
+          <h2 style="font-family:var(--f-serif);font-size:1.3rem;margin-bottom:1.5rem;color:var(--c-text);">Your Details</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+            <div class="form-group">
+              <label class="form-label" for="res-name">Full Name *</label>
+              <input type="text" id="res-name" name="name" class="form-control" required placeholder="Your name">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="res-phone">Mobile Number *</label>
+              <input type="tel" id="res-phone" name="phone" class="form-control" required placeholder="10-digit number" pattern="[0-9]{10,12}">
+            </div>
+            <div class="form-group" style="grid-column:span 2;">
+              <label class="form-label" for="res-email">Email (optional)</label>
+              <input type="email" id="res-email" name="email" class="form-control" placeholder="For booking confirmation">
+            </div>
+            <div class="form-group" style="grid-column:span 2;">
+              <label class="form-label" for="res-special">Special Requests</label>
+              <textarea id="res-special" name="special_requests" class="form-control" rows="2" placeholder="Anniversary, high chair, wheelchair access…"></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="confirm-reservation-btn" style="margin-top:.5rem;justify-content:center;padding:1rem 2rem;">
+            Confirm Reservation
+          </button>
+        </div>
+      </form>
+
+      <!-- Info Panel -->
+      <div data-animate>
+        <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:1.75rem;margin-bottom:1.5rem;">
+          <h3 style="font-family:var(--f-serif);font-size:1.1rem;color:var(--c-gold);margin-bottom:1rem;">Opening Hours</h3>
+          <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem;color:var(--c-text-2);">
+            <div style="display:flex;justify-content:space-between;"><span>Mon – Fri</span><span>11:00 – 22:30</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Saturday</span><span>10:00 – 23:00</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Sunday</span><span>10:00 – 22:00</span></div>
+          </div>
+        </div>
+        <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:1.75rem;">
+          <h3 style="font-family:var(--f-serif);font-size:1.1rem;color:var(--c-gold);margin-bottom:1rem;">Good to Know</h3>
+          <ul style="display:flex;flex-direction:column;gap:.75rem;font-size:.82rem;color:var(--c-text-2);">
+            <li>✓ Tables held for 15 minutes after booked time</li>
+            <li>✓ Large groups (8+) — call us for private room</li>
+            <li>✓ Cancellation: please call 2 hours before</li>
+            <li>✓ We accommodate most dietary needs</li>
+          </ul>
+        </div>
+        <div style="margin-top:1rem;text-align:center;">
+          <a href="{{ url_for('reservations.history') }}" class="btn btn-ghost" style="width:100%;justify-content:center;" id="view-reservations-btn">View My Reservations</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

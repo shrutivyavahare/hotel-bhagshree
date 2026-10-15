@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Our Story — Hotel Bhagshree Nashik{% endblock %}
+{% block meta_desc %}Discover the story of Hotel Bhagshree — Nashik's cherished culinary landmark since 1995. Handcrafted recipes, Godavari valley produce, and warm Maharashtra hospitality.{% endblock %}
+
+{% block extra_head %}
+<style>
+  [data-animate]{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
+  [data-animate].animated{opacity:1;transform:translateY(0)}
+  .milestone-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .milestone-card {
+    background: var(--c-bg-1);
+    border: 1px solid var(--c-border-2);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem 1.5rem;
+    position: relative;
+    transition: transform .25s ease, border-color .25s ease;
+  }
+  .milestone-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--c-gold);
+  }
+  .milestone-year {
+    font-family: var(--f-serif);
+    font-size: 1.8rem;
+    color: var(--c-gold);
+    font-weight: 700;
+    margin-bottom: .4rem;
+  }
+  .milestone-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--c-text);
+    margin-bottom: .5rem;
+  }
+  .milestone-desc {
+    font-size: .85rem;
+    color: var(--c-text-3);
+    line-height: 1.6;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Hero -->
+<div class="page-hero">
+  <div class="container">
+    <div class="section-label" style="justify-content:center;"><span>Celebrating 30 Years in Nashik</span></div>
+    <h1 style="font-family:var(--f-serif);font-size:clamp(2rem,5vw,3.5rem);margin-bottom:.75rem;">
+      Our <em style="color:var(--c-gold)">Heritage</em> in Nashik
+    </h1>
+    <p style="color:var(--c-text-2);max-width:540px;margin:0 auto;font-size:1.05rem;line-height:1.7;">
+      From a modest corner near the Godavari ghats to Nashik's most cherished destination for authentic Maharashtrian dining.
+    </p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+
+    <!-- Story Section -->
+    <div class="story-section" style="margin-bottom:5rem;">
+      <div>
+        <div class="section-label" data-animate><span>The Beginning</span></div>
+        <h2 style="font-family:var(--f-serif);font-size:clamp(1.75rem,3.5vw,2.5rem);margin-bottom:1.25rem;" data-animate>
+          A Kitchen Born from <em style="color:var(--c-gold)">Devotion &amp; Taste</em>
+        </h2>
+        <p class="lead" style="font-family:var(--f-serif);font-style:italic;font-size:1.15rem;color:var(--c-gold);margin-bottom:1.25rem;" data-animate>
+          "I wanted to offer people the pure, comforting taste of homemade food served with boundless affection."<br>
+          <span style="font-size:.85rem;color:var(--c-text-3);font-style:normal;">— Ramchandra Bhagshree, Founder</span>
+        </p>
+        <p data-animate style="line-height:1.8;color:var(--c-text-2);">
+          In 1995, amidst the spiritual serenity of the holy city of Nashik, Ramchandra Bhagshree started Hotel Bhagshree on College Road. With a modest stove, his mother’s heirloom stone-ground masala blends, and milk sourced fresh from local Trimbak dairies, he set out to serve the most wholesome food in the region.
+        </p>
+        <p style="margin-top:1rem;line-height:1.8;color:var(--c-text-2);" data-animate>
+          The word of our authentic <em>Nashik Misal</em>, soothing <em>Varan Bhat</em> with pure ghee, and slow-braised <em>Chicken Kolhapuri</em> spread across Khandesh and beyond. Over three decades, Hotel Bhagshree has become an essential stop for pilgrims, vineyard visitors, and local families celebrating their happiest occasions.
+        </p>
+        <div style="margin-top:2rem;" data-animate>
+          <a href="{{ url_for('menu.index') }}" class="btn btn-primary" id="about-explore-menu">🍽 Explore Our Menu</a>
+          <a href="{{ url_for('reservations.index') }}" class="btn btn-outline" style="margin-left:.75rem;" id="about-book-table">🪑 Reserve a Table</a>
+        </div>
+      </div>
+      <div data-animate>
+        <img src="{{ url_for('static', filename='images/restaurant_interior.jpg') }}"
+             alt="Hotel Bhagshree Nashik dining room — elegant warm wood interior"
+             style="width:100%;height:460px;object-fit:cover;border-radius:var(--radius-lg);box-shadow:0 12px 36px rgba(0,0,0,0.3);">
+      </div>
+    </div>
+
+    <!-- Milestones Timeline -->
+    <div style="padding:2rem 0 4rem;" data-animate>
+      <div class="section-head" style="text-align:center;">
+        <div class="section-label" style="justify-content:center;margin-bottom:.5rem;"><span>Milestones</span></div>
+        <h2 class="section-head__title">Three Decades of Serving Nashik</h2>
+        <p class="section-head__sub">The journey of building a culinary landmark in the grape capital of India.</p>
+      </div>
+
+      <div class="milestone-grid">
+        <div class="milestone-card" data-animate>
+          <div class="milestone-year">1995</div>
+          <div class="milestone-title">The First Table</div>
+          <div class="milestone-desc">Opened on College Road, Nashik serving authentic spicy Misal Pav and hand-churned Taak (spiced buttermilk).</div>
+        </div>
+        <div class="milestone-card" data-animate>
+          <div class="milestone-year">2003</div>
+          <div class="milestone-title">Family Dining Hall</div>
+          <div class="milestone-desc">Expanded to a spacious 60-seat hall to welcome families and travelers along the Mumbai-Nashik highway.</div>
+        </div>
+        <div class="milestone-card" data-animate>
+          <div class="milestone-year">2014</div>
+          <div class="milestone-title">Seven Cuisines</div>
+          <div class="milestone-desc">Introduced tandoor ovens and South Indian griddles, establishing our acclaimed multi-cuisine kitchen.</div>
+        </div>
+        <div class="milestone-card" data-animate>
+          <div class="milestone-year">Today</div>
+          <div class="milestone-title">Pride of Nashik</div>
+          <div class="milestone-desc">Serving over 500,000 satisfied guests with pure quality, farm-to-table ingredients, and love.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Values & Philosophy -->
+    <div style="padding:4rem 0;" data-animate>
+      <div class="section-head" style="text-align:center;">
+        <div class="section-label" style="justify-content:center;margin-bottom:.5rem;"><span>Our Philosophy</span></div>
+        <h2 class="section-head__title">What Makes Hotel Bhagshree Special</h2>
+        <p class="section-head__sub">Honouring age-old principles of purity, taste, and hospitality.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:2rem;margin-top:2.5rem;">
+        {% for val, icon, desc in [
+          ('Godavari Freshness','🌿','We procure crisp vegetables every morning directly from farmers in the fertile Godavari valley and Dindori farmlands.'),
+          ('Pure Desi Ghee & Spices','🏺','All gravies and sweets are cooked in pure ghee and slow-roasted, stone-ground masalas without artificial colours.'),
+          ('Atithi Devo Bhava','🤝','Every guest is received as an honoured guest with warm, unhurried, and attentive Maharashtrian hospitality.'),
+          ('Timeless Heritage','📜','Preserving genuine culinary recipes from Nashik, Kolhapur, and North India that have stood the test of time.'),
+        ] %}
+        <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:1.75rem;transition:border-color .2s ease;">
+          <div style="font-size:2rem;margin-bottom:.75rem;">{{ icon }}</div>
+          <h3 style="font-family:var(--f-serif);font-size:1.15rem;margin-bottom:.5rem;color:var(--c-text);">{{ val }}</h3>
+          <p style="font-size:.85rem;color:var(--c-text-3);line-height:1.7;">{{ desc }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Gallery -->
+    <div class="section-head" data-animate style="text-align:center;">
+      <div class="section-label" style="justify-content:center;margin-bottom:.5rem;"><span>Gallery</span></div>
+      <h2 class="section-head__title">Glimpses of Hotel Bhagshree</h2>
+      <p class="section-head__sub">A celebration of flavours, colors, and memorable dining experiences in Nashik.</p>
+    </div>
+    <div class="gallery-grid" data-animate>
+      <div class="gallery-grid__item">
+        <img src="{{ url_for('static', filename='images/restaurant_interior.jpg') }}" alt="Restaurant interior in Nashik" class="gallery-grid__img">
+      </div>
+      <div class="gallery-grid__item">
+        <img src="{{ url_for('static', filename='images/dish_misal_pav.jpg') }}" alt="Nashik Misal Pav" class="gallery-grid__img">
+      </div>
+      <div class="gallery-grid__item">
+        <img src="{{ url_for('static', filename='images/dish_butter_chicken.jpg') }}" alt="Butter Chicken" class="gallery-grid__img">
+      </div>
+      <div class="gallery-grid__item">
+        <img src="{{ url_for('static', filename='images/dish_masala_dosa.jpg') }}" alt="Crispy Masala Dosa" class="gallery-grid__img">
+      </div>
+      <div class="gallery-grid__item">
+        <img src="{{ url_for('static', filename='images/dish_gulab_jamun.jpg') }}" alt="Royal Gulab Jamun" class="gallery-grid__img">
+      </div>
+      <div class="gallery-grid__item">
+        <img src="{{ url_for('static', filename='images/dish_paneer_tikka.jpg') }}" alt="Tandoori Paneer Tikka" class="gallery-grid__img">
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

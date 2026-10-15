@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{% block meta_desc %}Hotel Bhagshree — Authentic Indian cuisine from Maharashtra, Punjab and South India. Fine dining in Nashik.{% endblock %}" />
+  <title>{% block title %}Hotel Bhagshree{% endblock %} | Authentic Indian Restaurant, Nashik</title>
+
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Main stylesheet (bundles Google Fonts via @import) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+  <!-- Favicon (emoji fallback) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪔</text></svg>" />
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- ── Navigation ──────────────────────────────────────────────────────── -->
+  <nav class="nav" id="main-nav" role="navigation" aria-label="Main navigation">
+    <div class="container nav__inner">
+
+      <a href="{{ url_for('main.index') }}" class="nav__brand" aria-label="Hotel Bhagshree Home">
+        <div class="nav__logo-mark" aria-hidden="true">HB</div>
+        <div class="nav__brand-text">
+          <span class="nav__name">Hotel Bhagshree</span>
+          <span class="nav__tagline">Restaurant &amp; Dining · Nashik</span>
+        </div>
+      </a>
+
+      <ul class="nav__links" role="list">
+        <li><a href="{{ url_for('main.index') }}"            class="nav__link" id="nav-home">Home</a></li>
+        <li><a href="{{ url_for('menu.index') }}"            class="nav__link" id="nav-menu">Menu</a></li>
+        <li><a href="{{ url_for('reservations.index') }}"    class="nav__link" id="nav-reserve">Reserve</a></li>
+        <li><a href="{{ url_for('main.about') }}"            class="nav__link" id="nav-about">About</a></li>
+        <li><a href="{{ url_for('main.contact') }}"          class="nav__link" id="nav-contact">Contact</a></li>
+      </ul>
+
+      <div class="nav__cta">
+        <a href="{{ url_for('orders.cart') }}" class="nav__cart-btn" id="nav-cart-btn" aria-label="View cart">
+          🛒 Cart
+          <span class="nav__cart-count" id="cart-count" style="display:none">0</span>
+        </a>
+        <a href="{{ url_for('reservations.index') }}" class="btn btn-primary" id="nav-book-btn">Reserve a Table</a>
+      </div>
+
+      <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- ── Flash Messages ──────────────────────────────────────────────────── -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages" role="alert" aria-live="polite">
+        {% for category, message in messages %}
+          <div class="flash flash--{{ category }}">
+            <span>{{ message }}</span>
+            <button class="flash__close" aria-label="Dismiss">✕</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- ── Page Content ────────────────────────────────────────────────────── -->
+  <main id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ── Footer ──────────────────────────────────────────────────────────── -->
+  {% block footer %}
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+
+        <div class="footer__brand">
+          <h3>Hotel Bhagshree</h3>
+          <p>Celebrating the heritage of Indian cuisine since 1995. Every dish is a story of tradition, patience, and the finest local ingredients.</p>
+          <div style="display:flex; gap:1rem; font-size:1.2rem;">
+            <a href="#" aria-label="Instagram" style="color:var(--c-text-3)">📸</a>
+            <a href="#" aria-label="Facebook"  style="color:var(--c-text-3)">📘</a>
+            <a href="#" aria-label="WhatsApp"  style="color:var(--c-text-3)">💬</a>
+          </div>
+        </div>
+
+        <div class="footer__col">
+          <h4>Navigate</h4>
+          <nav class="footer__links" aria-label="Footer navigation">
+            <a href="{{ url_for('main.index') }}"           class="footer__link">Home</a>
+            <a href="{{ url_for('menu.index') }}"           class="footer__link">Food Menu</a>
+            <a href="{{ url_for('reservations.index') }}"   class="footer__link">Reserve a Table</a>
+            <a href="{{ url_for('orders.cart') }}"          class="footer__link">Your Cart</a>
+            <a href="{{ url_for('orders.history') }}"       class="footer__link">Order History</a>
+          </nav>
+        </div>
+
+        <div class="footer__col">
+          <h4>Opening Hours</h4>
+          <div class="footer__hours">
+            <div class="footer__hour-row"><span>Mon – Fri</span><span>11:00 – 22:30</span></div>
+            <div class="footer__hour-row"><span>Saturday</span><span>10:00 – 23:00</span></div>
+            <div class="footer__hour-row"><span>Sunday</span>  <span>10:00 – 22:00</span></div>
+            <div class="footer__hour-row" style="margin-top:.5rem;color:var(--c-gold);font-size:.75rem;"><span>Kitchen closes 30 min early</span></div>
+          </div>
+        </div>
+
+        <div class="footer__col">
+          <h4>Contact &amp; Location</h4>
+          <div class="footer__links">
+            <span class="footer__link">📍 Near Canada Corner, College Road, Nashik 422005</span>
+            <a href="tel:+912532578899" class="footer__link">📞 +91 253 257 8899</a>
+            <a href="mailto:contact@hotelbhagshree.com" class="footer__link">✉ contact@hotelbhagshree.com</a>
+            <a href="{{ url_for('main.about') }}" class="footer__link" style="color:var(--c-gold)">Our Story →</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer__bottom">
+        <span>© {{ now.year if now else '2024' }} Hotel Bhagshree. All rights reserved.</span>
+        <span>Made with ❤ in Nashik, Maharashtra</span>
+      </div>
+    </div>
+  </footer>
+  {% endblock %}
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

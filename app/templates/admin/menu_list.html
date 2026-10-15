@@ -1,0 +1,78 @@
+{% extends "admin/base.html" %}
+{% block title %}Menu Management{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+  <h1>Menu Items</h1>
+  <a href="{{ url_for('admin.menu_add') }}" class="btn btn-primary" id="admin-add-dish-btn">+ Add New Dish</a>
+</div>
+
+<div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);overflow:hidden;">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Dish</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Type</th>
+        <th>Spice</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:.75rem;">
+            <img src="{{ url_for('static', filename='images/' + item.image_file) }}"
+                 style="width:44px;height:44px;object-fit:cover;border-radius:var(--radius);"
+                 alt="{{ item.name }}"
+                 onerror="this.style.display='none'">
+            <div>
+              <p style="color:var(--c-text);font-size:.88rem;font-weight:500;">{{ item.name }}</p>
+              {% if item.is_featured %}<span class="badge badge--featured" style="font-size:.6rem;">Chef's Pick</span>{% endif %}
+            </div>
+          </div>
+        </td>
+        <td>{{ item.category.name if item.category }}</td>
+        <td style="color:var(--c-gold);">₹{{ item.price | int }}</td>
+        <td>
+          <span class="badge badge--{{ item.food_type }}" style="font-size:.65rem;">
+            {{ 'Veg' if item.food_type == 'vegetarian' else 'Non-Veg' }}
+          </span>
+        </td>
+        <td style="text-transform:capitalize;">{{ item.spice_level | replace('_', ' ') }}</td>
+        <td>
+          <span class="status-badge {{ 'status-badge--confirmed' if item.is_available else 'status-badge--cancelled' }}" id="avail-{{ item.id }}"
+                data-availability-status="{{ item.id }}">
+            {{ 'Available' if item.is_available else 'Unavailable' }}
+          </span>
+        </td>
+        <td>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+            <button data-toggle-availability="{{ item.id }}"
+                    id="toggle-avail-{{ item.id }}"
+                    style="font-size:.72rem;padding:.3rem .6rem;border:1px solid var(--c-border);border-radius:var(--radius);color:var(--c-text-2);background:none;cursor:pointer;">
+              Toggle
+            </button>
+            <a href="{{ url_for('admin.menu_edit', item_id=item.id) }}"
+               class="btn btn-ghost"
+               id="edit-{{ item.id }}"
+               style="font-size:.72rem;padding:.3rem .6rem;">Edit</a>
+            <form method="POST" action="{{ url_for('admin.menu_delete', item_id=item.id) }}"
+                  onsubmit="return confirm('Delete {{ item.name }}?')" style="display:inline;">
+              <button type="submit" class="btn btn-danger"
+                      id="delete-{{ item.id }}"
+                      style="font-size:.72rem;padding:.3rem .6rem;">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" style="text-align:center;padding:3rem;color:var(--c-text-3);">No menu items found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

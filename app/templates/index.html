@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Hotel Bhagshree{% endblock %}
+{% block meta_desc %}Hotel Bhagshree — Authentic Maharashtrian, Punjabi and South Indian cuisine in Nashik. Fine dining experience since 1995.{% endblock %}
+
+{% block content %}
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════════════ -->
+<section class="hero" id="hero" aria-label="Hero section">
+  <div class="hero__bg"></div>
+
+  <div class="container hero__content">
+
+    <p class="hero__subtitle" data-animate>Authentic Heritage Dining · Nashik, Maharashtra</p>
+
+    <h1 class="hero__title" data-animate>
+      The Soul of Nashik<br>Served with <em>Tradition</em>
+    </h1>
+
+    <p class="hero__desc" data-animate>
+      Three decades of culinary heritage in the cultural heart of Nashik. Handcrafted recipes, farm-fresh Godavari valley produce, and unforgettable Indian flavours.
+    </p>
+
+    <div class="hero__actions" data-animate>
+      <a href="{{ url_for('menu.index') }}"         class="btn btn-primary" id="hero-explore-menu">🍽 Explore Menu</a>
+      <a href="{{ url_for('reservations.index') }}" class="btn btn-outline" id="hero-reserve">🪑 Reserve a Table</a>
+      <a href="{{ url_for('main.about') }}"         class="btn btn-ghost"   id="hero-our-story">📖 Our Story</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ INFO BAR ══════════════════════════════════════════════════════════════ -->
+<div class="info-bar" aria-label="Restaurant info">
+  <div class="container info-bar__inner">
+    <div class="info-bar__item">
+      <span class="info-bar__icon" aria-hidden="true">🕐</span>
+      <div>
+        <p class="info-bar__label">Opening Hours</p>
+        <p class="info-bar__value">Mon–Sun · 11:00 – 22:30</p>
+      </div>
+    </div>
+    <div class="info-bar__item">
+      <span class="info-bar__icon" aria-hidden="true">📍</span>
+      <div>
+        <p class="info-bar__label">Find Us in Nashik</p>
+        <p class="info-bar__value">Near Canada Corner, College Road, Nashik</p>
+      </div>
+    </div>
+    <div class="info-bar__item">
+      <span class="info-bar__icon" aria-hidden="true">📞</span>
+      <div>
+        <p class="info-bar__label">Reservations &amp; Inquiry</p>
+        <p class="info-bar__value"><a href="tel:+912532578899">+91 253 257 8899</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ POPULAR DISHES ════════════════════════════════════════════════════════ -->
+<section class="section" id="popular-dishes" aria-labelledby="popular-title">
+  <div class="container">
+
+    <div class="section-label" data-animate>
+      <span>Signatures</span>
+    </div>
+    <div class="section-head" data-animate>
+      <h2 class="section-head__title" id="popular-title">Popular Signatures</h2>
+      <p class="section-head__sub">Our most-loved culinary creations, crafted with fresh seasonal produce and artisanal spices from Nashik's Godavari valley.</p>
+    </div>
+
+    <div class="food-grid" id="popular-grid">
+      {% for item in featured_items %}
+      <article class="food-card"
+               data-item-id="{{ item.id }}"
+               data-animate
+               aria-label="{{ item.name }}">
+        <div class="food-card__img-wrap">
+          <img
+            src="{{ url_for('static', filename='images/' + item.image_file) }}"
+            alt="{{ item.name }}"
+            class="food-card__img"
+            loading="lazy"
+            onerror="this.onerror=null;this.src='/static/images/hero_food.jpg';"
+          />
+          <div class="food-card__badges">
+            <span class="badge badge--{{ item.food_type }}" aria-label="{{ item.food_type | replace('_', '-') }}">
+              {{ '🟢 Veg' if item.food_type == 'vegetarian' else '🔴 Non-Veg' }}
+            </span>
+            {% if item.is_featured %}
+            <span class="badge badge--featured">Chef's Pick</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="food-card__body">
+          <p class="food-card__category">{{ item.category.name if item.category }}</p>
+          <h3 class="food-card__name">{{ item.name }}</h3>
+          <p class="food-card__desc">{{ item.description }}</p>
+          <div class="meta-row">
+            <span title="Spice level">🌶 {{ item.spice_level | replace('_', ' ') | title }}</span>
+            <span title="Prep time">⏱ {{ item.prep_time }} min</span>
+            {% if item.calories %}
+            <span title="Calories">🔥 {{ item.calories }} cal</span>
+            {% endif %}
+          </div>
+          <div class="food-card__footer">
+            <div class="food-card__price">
+              <span>₹</span>{{ item.price | int }}
+            </div>
+            <button class="food-card__add"
+                    data-add-to-cart="{{ item.id }}"
+                    id="add-to-cart-{{ item.id }}"
+                    aria-label="Add {{ item.name }} to cart">
+              + Add
+            </button>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-8" data-animate>
+      <a href="{{ url_for('menu.index') }}" class="btn btn-outline" id="view-full-menu">View Full Menu →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ DIVIDER ══════════════════════════════════════════════════════════════ -->
+<div class="divider container"></div>
+
+<!-- ══ OUR STORY ════════════════════════════════════════════════════════════ -->
+<section class="section" id="our-story" aria-labelledby="story-title">
+  <div class="container">
+    <div class="story-section">
+      <div>
+        <div class="section-label" data-animate>
+          <span>The Nashik Legacy</span>
+        </div>
+        <h2 style="font-family:var(--f-serif); margin-bottom:1.5rem;" data-animate id="story-title">
+          A Symphony of Spices<br>Since <em style="color:var(--c-gold)">1995</em>
+        </h2>
+        <p class="lead" style="font-family:var(--f-serif);font-style:italic;font-size:1.1rem;color:var(--c-gold);margin-bottom:1.25rem;" data-animate>
+          "Food is not just nourishment. It is memory, tradition, and devotion served with warmth."
+        </p>
+        <p data-animate>
+          Founded in Nashik by Ramchandra Bhagshree, Hotel Bhagshree began with a sacred promise — to cook with the same purity, care, and devotion that you would for your own family. From our humble beginnings near the sacred Godavari ghats to our renowned restaurant on College Road, we have become Nashik's cherished home for authentic regional dining.
+        </p>
+        <p style="margin-top:1rem;" data-animate>
+          We source cold-pressed oils, pure cow ghee, stone-ground local masalas, and crisp morning harvest from Godavari valley farmers every sunrise. Every dish brings the authentic richness of Maharashtra and beyond.
+        </p>
+        <a href="{{ url_for('main.about') }}" class="btn btn-outline" style="margin-top:2rem;" data-animate id="read-story-btn">Read Our Story →</a>
+      </div>
+
+      <div data-animate>
+        <img
+          src="{{ url_for('static', filename='images/restaurant_interior.jpg') }}"
+          alt="Hotel Bhagshree restaurant interior — warm amber lighting and elegant Indian decor"
+          class="story-section__img"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FINE DINING EXPERIENCE HIGHLIGHT ══════════════════════════════════════ -->
+<section class="section--sm" style="background:var(--c-bg-1);border-top:1px solid var(--c-border-2);border-bottom:1px solid var(--c-border-2);" aria-label="Dining experience in Nashik">
+  <div class="container" style="text-align:center;max-width:680px;">
+    <div class="section-label" data-animate style="justify-content:center;">
+      <span>Fine Dining in Nashik</span>
+    </div>
+    <h2 style="font-family:var(--f-serif);margin-bottom:1rem;font-size:clamp(1.75rem,3.5vw,2.4rem);" data-animate>
+      Celebrate Together with <em style="color:var(--c-gold)">Warm Hospitality</em>
+    </h2>
+    <p data-animate style="margin-bottom:2rem;color:var(--c-text-2);font-size:1rem;line-height:1.7;">
+      Whether touring sacred Panchavati and the vineyards of Nashik or planning a family feast on College Road, reserve your table in advance for attentive service and delightful memories.
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;" data-animate>
+      <a href="{{ url_for('reservations.index') }}" class="btn btn-primary" id="cta-reserve-btn">🪑 Reserve a Table</a>
+      <a href="{{ url_for('menu.index') }}" class="btn btn-outline" id="cta-view-menu-btn">🍽 Browse All Dishes</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CATEGORIES OVERVIEW ══════════════════════════════════════════════════ -->
+<section class="section" id="categories" aria-labelledby="cat-title">
+  <div class="container">
+    <div class="section-head" data-animate>
+      <h2 class="section-head__title" id="cat-title">Explore by Cuisine</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;">
+      {% for cat in categories %}
+      <a href="{{ url_for('menu.index', category=cat.name) }}"
+         class="cat-tab" data-animate style="text-align:center;padding:1.5rem 1rem;"
+         id="cat-link-{{ cat.name | lower | replace(' ', '-') }}">
+        <div style="font-size:2rem;margin-bottom:.5rem;">{{ cat.icon }}</div>
+        <div style="font-size:.85rem;font-weight:500;color:var(--c-text);">{{ cat.name }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ══ REVIEWS ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="reviews" aria-labelledby="reviews-title" style="background:var(--c-bg-1);">
+  <div class="container">
+    <div class="section-label" data-animate style="justify-content:center;">
+      <span>Guest Reviews</span>
+    </div>
+    <div class="section-head" data-animate>
+      <h2 class="section-head__title" id="reviews-title">What Our Guests Say</h2>
+      <p class="section-head__sub">Sample reviews from our valued guests — authentic experiences, real moments.</p>
+    </div>
+
+    <div class="reviews-grid">
+      {% set reviews = [
+        {'name': 'Priya Sharma', 'initials': 'PS', 'rating': 5, 'date': 'October 2024', 'text': 'The Misal Pav here in Nashik is legendary! The balance of tarri, the freshness of farsan and soft buttered pav — absolutely divine. Hotel Bhagshree on College Road is our family\'s favorite dining spot.'},
+        {'name': 'Rahul Joshi',  'initials': 'RJ', 'rating': 5, 'date': 'September 2024', 'text': 'Brought my family here for a Sunday lunch. The Varan Bhat with homemade ghee was pure soul food, and the Chicken Kolhapuri was fiery perfection. Authentic Nashik hospitality at its finest.'},
+        {'name': 'Ananya Kulkarni', 'initials': 'AK', 'rating': 5, 'date': 'August 2024', 'text': 'Ordered dinner through their website. The Butter Chicken and Dal Makhani arrived piping hot in 30 minutes. Rich flavours, reasonable prices, and pristine hygiene.'},
+        {'name': 'Vikram Patil', 'initials': 'VP', 'rating': 4, 'date': 'July 2024',      'text': 'The Masala Dosa was exceptionally crisp and the coconut chutney tasted freshly ground. One of the finest dining spots in Nashik for South Indian and Maharashtrian dishes alike.'},
+        {'name': 'Meera Desai',  'initials': 'MD', 'rating': 5, 'date': 'June 2024',      'text': 'Reserved a window table for our anniversary through the website — booking was seamless. Warm amber lighting, soft music, and mouth-melting Gulab Jamun made our evening truly memorable.'},
+        {'name': 'Aditya Nair',  'initials': 'AN', 'rating': 5, 'date': 'May 2024',       'text': 'Visiting Trimbakeshwar and stopped in Nashik for lunch. The thali and Paneer Tikka Masala were outstanding. Attentive staff and beautiful ambiance.'},
+      ] %}
+
+      {% for review in reviews %}
+      <article class="review-card" data-animate aria-label="Review by {{ review.name }}">
+        <div class="review-card__stars" aria-label="{{ review.rating }} out of 5 stars">
+          {{ '★' * review.rating }}{{ '☆' * (5 - review.rating) }}
+        </div>
+        <blockquote class="review-card__text">"{{ review.text }}"</blockquote>
+        <div class="review-card__author">
+          <div class="review-card__avatar" aria-hidden="true">{{ review.initials }}</div>
+          <div>
+            <p class="review-card__name">{{ review.name }}</p>
+            <p class="review-card__date">{{ review.date }}</p>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Scroll-triggered animations
+  document.addEventListener('DOMContentLoaded', () => {
+    // Inject base CSS for animations
+    const style = document.createElement('style');
+    style.textContent = `
+      [data-animate] { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+      [data-animate].animated { opacity: 1; transform: translateY(0); }
+    `;
+    document.head.appendChild(style);
+  });
+</script>
+{% endblock %}

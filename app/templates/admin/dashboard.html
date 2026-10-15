@@ -1,0 +1,119 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+  <div>
+    <h1>Dashboard</h1>
+    <p style="font-size:.82rem;color:var(--c-text-3);">Welcome back, {{ current_user.full_name or current_user.username }}.</p>
+  </div>
+  <div style="font-size:.78rem;color:var(--c-text-3);">Hotel Bhagshree · Admin</div>
+</div>
+
+<!-- Today Stats -->
+<p style="font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--c-gold);margin-bottom:1rem;">Today's Summary</p>
+<div class="stats-grid" style="margin-bottom:2rem;">
+  <div class="stat-card">
+    <div class="stat-card__icon">🛒</div>
+    <p class="stat-card__label">Today's Orders</p>
+    <p class="stat-card__value">{{ today_orders | default(0) }}</p>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__icon">💰</div>
+    <p class="stat-card__label">Today's Revenue</p>
+    <p class="stat-card__value">₹{{ (today_revenue | default(0)) | int }}</p>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__icon">📅</div>
+    <p class="stat-card__label">Today's Reservations</p>
+    <p class="stat-card__value">{{ today_reservations | default(0) }}</p>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__icon">⏳</div>
+    <p class="stat-card__label">Pending Orders</p>
+    <p class="stat-card__value{% if (pending_orders | default(0)) > 0 %} stat-card__value--alert{% endif %}">{{ pending_orders | default(0) }}</p>
+  </div>
+</div>
+
+<!-- All-time Stats -->
+<p style="font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--c-text-3);margin-bottom:1rem;">All-Time Totals</p>
+<div class="stats-grid" style="margin-bottom:3rem;">
+  <div class="stat-card">
+    <p class="stat-card__label">Total Orders</p>
+    <p class="stat-card__value">{{ total_orders | default(0) }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-card__label">Total Revenue</p>
+    <p class="stat-card__value">₹{{ (total_revenue | default(0)) | int }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-card__label">Total Reservations</p>
+    <p class="stat-card__value">{{ total_reservations | default(0) }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-card__label">Menu Items</p>
+    <p class="stat-card__value">{{ total_menu_items | default(0) }}</p>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem;">
+  <a href="{{ url_for('admin.orders', status='pending') }}"   class="btn btn-outline" id="dash-pending-orders">Pending Orders ({{ pending_orders | default(0) }})</a>
+  <a href="{{ url_for('admin.reservations') }}"                class="btn btn-outline" id="dash-reservations">Today's Reservations</a>
+  <a href="{{ url_for('admin.menu_add') }}"                    class="btn btn-primary" id="dash-add-dish">+ Add New Dish</a>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+
+  <!-- Recent Orders -->
+  <div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+      <h3 style="font-family:var(--f-serif);font-size:1.1rem;color:var(--c-text);">Recent Orders</h3>
+      <a href="{{ url_for('admin.orders') }}" style="font-size:.78rem;color:var(--c-gold);">View All →</a>
+    </div>
+    <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);overflow:hidden;">
+      <table class="admin-table">
+        <thead><tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for order in recent_orders %}
+          <tr>
+            <td><a href="{{ url_for('orders.status', order_id=order.order_id) }}" style="color:var(--c-gold);font-family:monospace;font-size:.8rem;">{{ order.order_id }}</a></td>
+            <td style="color:var(--c-text);">{{ order.customer_name }}</td>
+            <td>₹{{ order.total_amount | int }}</td>
+            <td><span class="status-badge status-badge--{{ order.status }}">{{ order.status }}</span></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" style="text-align:center;color:var(--c-text-3);padding:2rem;">No orders yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Recent Reservations -->
+  <div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+      <h3 style="font-family:var(--f-serif);font-size:1.1rem;color:var(--c-text);">Recent Reservations</h3>
+      <a href="{{ url_for('admin.reservations') }}" style="font-size:.78rem;color:var(--c-gold);">View All →</a>
+    </div>
+    <div style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);overflow:hidden;">
+      <table class="admin-table">
+        <thead><tr><th>Ref</th><th>Guest</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for res in recent_reservations %}
+          <tr>
+            <td><span style="color:var(--c-gold);font-family:monospace;font-size:.8rem;">{{ res.booking_ref }}</span></td>
+            <td style="color:var(--c-text);">{{ res.customer_name }}</td>
+            <td>{{ res.reservation_date.strftime('%d %b') }} {{ res.reservation_time }}</td>
+            <td><span class="status-badge status-badge--{{ res.status }}">{{ res.status }}</span></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" style="text-align:center;color:var(--c-text-3);padding:2rem;">No reservations yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

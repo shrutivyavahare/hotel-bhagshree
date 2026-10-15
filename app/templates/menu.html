@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Food Menu{% endblock %}
+{% block meta_desc %}Browse Hotel Bhagshree's full menu — Maharashtrian, Punjabi, South Indian, Chinese, Snacks, Desserts and Beverages. Filter by diet, spice, and more.{% endblock %}
+
+{% block extra_head %}
+<style>
+  [data-animate] { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .5s ease; }
+  [data-animate].animated { opacity: 1; transform: translateY(0); }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Page Hero -->
+<div class="page-hero">
+  <div class="container">
+    <div class="section-label" style="justify-content:center;">
+      <span>Dining at Bhagshree</span>
+    </div>
+    <h1 style="font-family:var(--f-serif);font-size:clamp(2rem,5vw,3.5rem);margin-bottom:.75rem;">
+      Our <em style="color:var(--c-gold)">Menu</em>
+    </h1>
+    <p style="color:var(--c-text-2);max-width:520px;margin:0 auto;font-size:1.02rem;">
+      Curated culinary recipes from seven rich traditions. Freshly prepared to order with farm-fresh produce from Nashik's Godavari valley.
+    </p>
+  </div>
+</div>
+
+<section class="section--sm">
+  <div class="container">
+
+    <!-- Category Tabs -->
+    <div class="cat-tabs" role="tablist" aria-label="Cuisine category filter" id="cat-tabs">
+      <button class="cat-tab active" data-category="" role="tab" aria-selected="true"  id="cat-all">All</button>
+      {% for cat in categories %}
+      <button class="cat-tab" data-category="{{ cat.name }}"
+              role="tab" aria-selected="false"
+              id="cat-{{ cat.name | lower | replace(' ', '-') }}">
+        {{ cat.icon }} {{ cat.name }}
+      </button>
+      {% endfor %}
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar" role="search">
+      <div class="filter-bar__search">
+        <span aria-hidden="true">🔍</span>
+        <input type="text"
+               id="menu-search"
+               data-menu-search
+               placeholder="Search dishes…"
+               aria-label="Search menu items"
+               value="{{ search_q }}" />
+      </div>
+
+      <div class="filter-pill" role="group" aria-label="Diet filter">
+        <button data-filter="" data-filter-group="food_type" class="{{ 'active' if not food_type }}" aria-pressed="{{ 'true' if not food_type else 'false' }}">All</button>
+        <button data-filter="vegetarian"     data-filter-group="food_type" class="{{ 'active' if food_type == 'vegetarian' }}"     aria-pressed="{{ 'true' if food_type == 'vegetarian' else 'false' }}">🟢 Veg</button>
+        <button data-filter="non_vegetarian" data-filter-group="food_type" class="{{ 'active' if food_type == 'non_vegetarian' }}" aria-pressed="{{ 'true' if food_type == 'non_vegetarian' else 'false' }}">🔴 Non-Veg</button>
+      </div>
+
+      <div class="filter-pill" role="group" aria-label="Spice filter">
+        <button data-filter="" data-filter-group="spice_level" class="{{ 'active' if not spice_level }}">Any Spice</button>
+        <button data-filter="mild"        data-filter-group="spice_level" class="{{ 'active' if spice_level == 'mild' }}">Mild</button>
+        <button data-filter="medium"      data-filter-group="spice_level" class="{{ 'active' if spice_level == 'medium' }}">Medium</button>
+        <button data-filter="spicy"       data-filter-group="spice_level" class="{{ 'active' if spice_level == 'spicy' }}">Spicy 🌶</button>
+        <button data-filter="extra_spicy" data-filter-group="spice_level" class="{{ 'active' if spice_level == 'extra_spicy' }}">Extra Spicy 🔥</button>
+      </div>
+    </div>
+
+    <!-- Results Count -->
+    <p style="font-size:.82rem;color:var(--c-text-3);margin-bottom:2rem;" id="results-count">
+      Showing <strong style="color:var(--c-text)">{{ items | length }}</strong> dishes
+    </p>
+
+    <!-- Food Grid -->
+    {% if items %}
+    <div class="food-grid" id="menu-grid" aria-label="Menu items">
+      {% for item in items %}
+      <article class="food-card"
+               data-item-id="{{ item.id }}"
+               data-category="{{ item.category.name | lower if item.category else '' }}"
+               data-food-type="{{ item.food_type }}"
+               data-spice-level="{{ item.spice_level }}"
+               data-name="{{ item.name | lower }}"
+               data-animate
+               aria-label="{{ item.name }}, ₹{{ item.price | int }}">
+        <div class="food-card__img-wrap">
+          <img
+            src="{{ url_for('static', filename='images/' + item.image_file) }}"
+            alt="{{ item.name }}"
+            class="food-card__img"
+            loading="lazy"
+            onerror="this.onerror=null;this.src='/static/images/hero_food.jpg';"
+          />
+          <div class="food-card__badges">
+            <span class="badge badge--{{ item.food_type }}">
+              {{ '🟢 Veg' if item.food_type == 'vegetarian' else '🔴 Non-Veg' }}
+            </span>
+            {% if item.is_featured %}
+              <span class="badge badge--featured">Chef's Pick</span>
+            {% endif %}
+            {% if item.spice_level == 'extra_spicy' %}
+              <span class="badge badge--extra_spicy">🔥 Extra Spicy</span>
+            {% elif item.spice_level == 'spicy' %}
+              <span class="badge badge--spicy">🌶 Spicy</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="food-card__body">
+          <p class="food-card__category">{{ item.category.name if item.category }}</p>
+          <h2 class="food-card__name">{{ item.name }}</h2>
+          <p class="food-card__desc">{{ item.description }}</p>
+          <div class="meta-row">
+            <span title="Prep time">⏱ {{ item.prep_time }} min</span>
+            {% if item.calories %}<span title="Calories">🔥 {{ item.calories }} cal</span>{% endif %}
+            <span title="Rating">⭐ {{ item.rating }}</span>
+          </div>
+          <div class="food-card__footer">
+            <div class="food-card__price"><span>₹</span>{{ item.price | int }}</div>
+            <button class="food-card__add"
+                    data-add-to-cart="{{ item.id }}"
+                    id="add-{{ item.id }}"
+                    aria-label="Add {{ item.name }} to cart">
+              + Add to Cart
+            </button>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <div style="text-align:center;padding:4rem;color:var(--c-text-3);">
+      <div style="font-size:3rem;margin-bottom:1rem;">🍽</div>
+      <h3 style="font-family:var(--f-serif);color:var(--c-text-2);margin-bottom:.5rem;">No dishes found</h3>
+      <p>Try adjusting your filters or <a href="{{ url_for('menu.index') }}" style="color:var(--c-gold)">view all dishes</a>.</p>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Update results count on filter
+  const grid = document.getElementById('menu-grid');
+  const countEl = document.getElementById('results-count');
+
+  function updateCount() {
+    if (!grid || !countEl) return;
+    const visible = [...grid.querySelectorAll('.food-card')].filter(c => c.style.display !== 'none').length;
+    countEl.innerHTML = `Showing <strong style="color:var(--c-text)">${visible}</strong> dishes`;
+  }
+
+  // Override applyAllFilters to also update count
+  const origFilter = window.applyAllFilters;
+  document.addEventListener('DOMContentLoaded', () => {
+    const origApply = window.applyAllFilters;
+    // Hook after filter
+    const observer = new MutationObserver(updateCount);
+    if (grid) observer.observe(grid, { childList: false, subtree: false, attributes: true, attributeFilter: ['style'] });
+  });
+</script>
+{% endblock %}

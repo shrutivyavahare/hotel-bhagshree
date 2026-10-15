@@ -1,0 +1,86 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ action }} Dish{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+  <h1>{{ action }} Dish</h1>
+  <a href="{{ url_for('admin.menu_list') }}" class="btn btn-ghost" id="back-menu-btn">← Back to Menu</a>
+</div>
+
+<div style="max-width:700px;">
+  <form method="POST" style="background:var(--c-bg-1);border:1px solid var(--c-border-2);border-radius:var(--radius-lg);padding:2rem;">
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+      <div class="form-group" style="grid-column:span 2;">
+        <label class="form-label" for="dish-name">Dish Name *</label>
+        <input type="text" id="dish-name" name="name" class="form-control" required
+               value="{{ item.name if item else '' }}" placeholder="e.g. Misal Pav">
+      </div>
+      <div class="form-group" style="grid-column:span 2;">
+        <label class="form-label" for="dish-desc">Description *</label>
+        <textarea id="dish-desc" name="description" class="form-control" required rows="3"
+                  placeholder="Describe the dish…">{{ item.description if item else '' }}</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dish-price">Price (₹) *</label>
+        <input type="number" id="dish-price" name="price" class="form-control" required
+               step="0.5" min="1" value="{{ item.price if item else '' }}" placeholder="120">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dish-cat">Category *</label>
+        <select id="dish-cat" name="category_id" class="form-control" required>
+          {% for cat in categories %}
+          <option value="{{ cat.id }}" {{ 'selected' if item and item.category_id == cat.id }}>{{ cat.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dish-type">Food Type *</label>
+        <select id="dish-type" name="food_type" class="form-control">
+          <option value="vegetarian"     {{ 'selected' if item and item.food_type == 'vegetarian' }}>Vegetarian</option>
+          <option value="non_vegetarian" {{ 'selected' if item and item.food_type == 'non_vegetarian' }}>Non-Vegetarian</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dish-spice">Spice Level *</label>
+        <select id="dish-spice" name="spice_level" class="form-control">
+          {% for sl in ['mild','medium','spicy','extra_spicy'] %}
+          <option value="{{ sl }}" {{ 'selected' if item and item.spice_level == sl }}>{{ sl | replace('_',' ') | title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dish-prep">Prep Time (mins)</label>
+        <input type="number" id="dish-prep" name="prep_time" class="form-control"
+               min="1" value="{{ item.prep_time if item else 20 }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dish-calories">Calories</label>
+        <input type="number" id="dish-calories" name="calories" class="form-control"
+               min="0" value="{{ item.calories if item else '' }}" placeholder="Optional">
+      </div>
+      <div class="form-group" style="grid-column:span 2;">
+        <label class="form-label" for="dish-meal">Meal Times (comma-separated)</label>
+        <input type="text" id="dish-meal" name="meal_time" class="form-control"
+               value="{{ item.meal_time if item else 'lunch,dinner' }}"
+               placeholder="breakfast,lunch,dinner,snacks">
+        <p class="form-hint">Options: breakfast, lunch, dinner, snacks, dessert</p>
+      </div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;">
+          <input type="checkbox" name="is_available" {{ 'checked' if not item or item.is_available }} style="accent-color:var(--c-gold);">
+          <span style="font-size:.88rem;color:var(--c-text-2);">Available</span>
+        </label>
+      </div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;">
+          <input type="checkbox" name="is_featured" {{ 'checked' if item and item.is_featured }} style="accent-color:var(--c-gold);">
+          <span style="font-size:.88rem;color:var(--c-text-2);">Chef's Pick (Featured)</span>
+        </label>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="save-dish-btn">{{ action }} Dish</button>
+  </form>
+</div>
+{% endblock %}
